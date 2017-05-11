@@ -1,0 +1,31 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model List<GameTracker.Models.Game>
+
+<form method="post">
+    <input type="text" name="searchstring">
+    <input type="submit" value="Search" />
+</form>
+<p>@ViewBag.Searchstring</p>
+
+@if (ViewBag.Items != null)
+{
+@foreach (var game in ViewBag.Items.Results)
+{
+    <p>@game.Name</p>
+}
+}
+@if (Model != null)
+{
+    <form asp-controller="Home" asp-action="AddGame" method="post">
+        @foreach (var g in Model)
+        {
+
+            <input type="radio" name="game" value="g">@g.Name   @g.Original_release_date.ToString("MM/dd/yyyy")<br>
+}
+        <input type="submit" value="Add Game" />
+        </form>
+}

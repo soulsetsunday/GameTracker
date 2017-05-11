@@ -1,0 +1,41 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<div class="month">
+    <ul>
+        <li class="prev">&#10094;</li>
+        <li class="next">&#10095;</li>
+        <li>
+            @CalendarTesting2.ViewModels.ViewCalendar.thisDay.ToString("MMMM")<br>
+            <span style="font-size:18px">@CalendarTesting2.ViewModels.ViewCalendar.thisDay.ToString("yyyy")</span>
+        </li>
+    </ul>
+</div>
+
+<ul class="weekdays">
+    <li>Su</li>
+    <li>Mo</li>
+    <li>Tu</li>
+    <li>We</li>
+    <li>Th</li>
+    <li>Fr</li>
+    <li>Sa</li>
+
+</ul>
+
+<ul class="days">
+
+    @foreach (int date in CalendarTesting2.ViewModels.ViewCalendar.GenCalendar())
+    {
+        @if (date == CalendarTesting2.ViewModels.ViewCalendar.thisDay.Day)
+        {
+            <li><span class="active"><a asp-controller="Search" asp-action="Index" asp-route-id="@CalendarTesting2.ViewModels.ViewCalendar.thisDay.ToString("M-dd-yyyy")" >@date</a></span></li>
+        }
+        else
+        { 
+        <li>@date</li>
+        }
+    }
+</ul>

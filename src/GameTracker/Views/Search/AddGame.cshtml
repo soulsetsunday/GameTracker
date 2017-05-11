@@ -1,0 +1,15 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+@model IList<GameTracker.Models.Game>
+<h1>Add Page</h1>
+@if (Model != null)
+{ 
+    foreach (var g in Model)
+    {
+        <p>@g.Name @g.Original_release_date.ToString("MMMM dd, yyyy") @g.Platform.Name <img src="@g.GameImages.Icon_url"></p>
+    }
+}

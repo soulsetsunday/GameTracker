@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
+using GameTracker.Data;
 
 namespace GameTracker
 {
@@ -27,7 +29,10 @@ namespace GameTracker
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSession(/* options go here */);
             // Add framework services.
+            services.AddDbContext<GameDbContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddMvc();
         }
 
@@ -47,6 +52,7 @@ namespace GameTracker
                 app.UseExceptionHandler("/Home/Error");
             }
 
+            app.UseSession();
             app.UseStaticFiles();
 
             app.UseMvc(routes =>
