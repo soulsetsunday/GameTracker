@@ -11,7 +11,10 @@ namespace GameTracker.Models
         public DateTime Original_release_date { get; set; }
         public int ID { get; set; }
         public GameImage GameImages { get; set; }
-        //try as a dictionary of strings
+        public DateTime FirstAdded { get; set; }
+        public DateTime MostRecentlyAdded { get; set; }
+        public int DaysPlayed { get; set; } = 1;
+        //not great, but atm games are only added if played on a day
 
         public Platform Platform { get; set; }
 
@@ -22,6 +25,13 @@ namespace GameTracker.Models
             GameImages = new GameImage();
         }
             
+    }
+
+    public class Day
+    {
+        public int ID { get; set; }
+        public DateTime CalendarDate { get; set; }
+        public IList<Game> GamesPlayed { get; set; }
     }
 
     public class GameImage

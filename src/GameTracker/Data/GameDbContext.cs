@@ -12,6 +12,7 @@ namespace GameTracker.Data
         public DbSet<Game> Games { get; set; }
         public DbSet<Platform> Platforms { get; set; }
         public DbSet<GameImage> GameImages { get; set; }
+        public DbSet<Day> Days { get; set; }
 
         public GameDbContext(DbContextOptions<GameDbContext> options)
                 : base(options)

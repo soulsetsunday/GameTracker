@@ -8,32 +8,19 @@ using GameTracker.Data;
 namespace GameTracker.Migrations
 {
     [DbContext(typeof(GameDbContext))]
-    partial class GameDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170515172723_GameDateTimes")]
+    partial class GameDateTimes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.1")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("GameTracker.Models.Day", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime>("CalendarDate");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("Days");
-                });
-
             modelBuilder.Entity("GameTracker.Models.Game", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd();
-
-                    b.Property<int?>("DayID");
 
                     b.Property<int>("DaysPlayed");
 
@@ -50,8 +37,6 @@ namespace GameTracker.Migrations
                     b.Property<int?>("PlatformID");
 
                     b.HasKey("ID");
-
-                    b.HasIndex("DayID");
 
                     b.HasIndex("GameImagesID");
 
@@ -104,10 +89,6 @@ namespace GameTracker.Migrations
 
             modelBuilder.Entity("GameTracker.Models.Game", b =>
                 {
-                    b.HasOne("GameTracker.Models.Day")
-                        .WithMany("GamesPlayed")
-                        .HasForeignKey("DayID");
-
                     b.HasOne("GameTracker.Models.GameImage", "GameImages")
                         .WithMany()
                         .HasForeignKey("GameImagesID");

@@ -85,8 +85,10 @@ namespace GameTracker.Controllers
                     storeIndex = i;
 
                     int loopcheck1 = 0;
+                    var loopcheck2 = resultList[i].Platforms.Count;
                     for (int j = 0; j < resultList[i].Platforms.Count; j++)
                     {
+                        var loopcheck3 = resultList[i].Platforms[j].ID;
                         if (resultList[i].Platforms[j].ID == platformid)
                         {
                             //SingleOrDefault instead of single to prevent null exceptions
@@ -120,6 +122,9 @@ namespace GameTracker.Controllers
                             Name = resultList[i].Name,
                             Original_release_date = DateTime.Parse(resultList[i].Original_release_date),
                             Platform = tempPlatform,
+                            FirstAdded = DateTime.Today,
+                            MostRecentlyAdded = DateTime.Today,
+
                         };
 
                     Type type = typeof(Image);
@@ -136,6 +141,9 @@ namespace GameTracker.Controllers
 
                         context.Games.Add(newDBGame);
                         context.SaveChanges();
+
+                    //add the game to a day
+
                     }
                 }
 

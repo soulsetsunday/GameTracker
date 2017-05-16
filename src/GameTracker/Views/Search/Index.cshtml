@@ -30,6 +30,7 @@
                 *@
                 <input type="radio" name="gameid" value="@g.id">@g.Name   @g.Original_release_date
                 <select name="platformid">
+                    <option selected disabled hidden style='display: none' value=''> -- select an option -- </option>
                     @foreach (var p in g.Platforms)
                     {
                     <option value="@p.ID">@p.Name</option>
