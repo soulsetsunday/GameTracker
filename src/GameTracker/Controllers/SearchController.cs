@@ -139,12 +139,13 @@ namespace GameTracker.Controllers
                         newDBGame.GameImages.GetType().GetProperty(property.Name).SetValue(newDBGame.GameImages, svalue2);
                     }
 
-                        context.Games.Add(newDBGame);
-                        context.SaveChanges();
-
+                    context.Games.Add(newDBGame);
+                    context.SaveChanges();
                     //add the game to a day
+                    AddGameToDay(context.Games.Single(c => c.Name == resultList[i].Name));
 
-                    }
+                   
+                }
                 }
 
 
@@ -158,6 +159,42 @@ namespace GameTracker.Controllers
             IList<Game> games = context.Games.Include(i => i.GameImages).Include(p => p.Platform).ToList();
             int checkwhatgameslooklike = 4;
             return View(games);
+        }
+
+        public IActionResult Days()
+        {
+            List<Day> days = context.Days.Include(g => g.GamesPlayed).ToList();
+            return View(days);
+        }
+
+        //this needs to be elsewhere
+        //can't pass DateTime.Today, nullable DateTime would need to be converted 
+        //this should take other days eventually
+        public void AddGameToDay(Game game, DateTime day = default(DateTime))
+        {
+            if (day == default(DateTime))
+            {
+                day = DateTime.Today;
+            }
+            if (!context.Days.Any(d => d.CalendarDate == day))
+            {
+                Day newDay = new Day();
+
+                newDay.CalendarDate = day;
+                newDay.GamesPlayed.Add(game);
+                
+
+                context.Days.Add(newDay);
+                context.SaveChanges();
+            }
+            else
+            { 
+                Day oldDay = context.Days.Single(d => d.CalendarDate == day);
+                oldDay.GamesPlayed.Add(game);
+            }
+
+
+            return;
         }
 
         private async Task<String> GetTestObjects(string searchstring)

@@ -31,7 +31,12 @@ namespace GameTracker.Models
     {
         public int ID { get; set; }
         public DateTime CalendarDate { get; set; }
-        public IList<Game> GamesPlayed { get; set; }
+        public List<Game> GamesPlayed { get; set; }
+
+        public Day()
+        {
+            GamesPlayed = new List<Game>();
+        }
     }
 
     public class GameImage
