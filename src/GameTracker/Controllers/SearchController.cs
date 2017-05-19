@@ -38,6 +38,7 @@ namespace GameTracker.Controllers
         public static int storeIndex;
         //"
         public static DateTime dateForDB;
+        public const int mostRecentlyAddedLimit = 5;
 
         // GET: /<controller>/
         [HttpGet]
@@ -48,11 +49,13 @@ namespace GameTracker.Controllers
             DateTime.TryParseExact(id, "M-dd-yyyy", DateTimeFormatInfo.CurrentInfo, DateTimeStyles.None, out calendarDate);
             ViewBag.date = calendarDate;
                 //This should get a list of all games and platforms from database
-                IList<Game> games = context.Games.Include(c => c.Platform).Include(i => i.GameImages).ToList();
+                IList<Game> games = context.Games.Include(c => c.Platform).Include(i => i.GameImages).OrderByDescending(x => x.MostRecentlyAdded).Take(mostRecentlyAddedLimit).ToList();
             int checkgamesstate = 4;
-            return View();
+            return View(games);
         }
 
+        //this was changed because Index also needed to recieve a string, having this redirect to index
+        //is probably not great.
         [HttpPost]
         public IActionResult Results(string searchstring)
         {
@@ -68,7 +71,8 @@ namespace GameTracker.Controllers
             //wrap.Viewmodels = MakeGameList(searchResults);
             resultList = searchResults.Results;
 
-            return View("Index", resultList);
+            //return View("Index", resultList);
+            return View(resultList);
         }
 
         [HttpPost]
@@ -161,6 +165,18 @@ namespace GameTracker.Controllers
             return View(games);
         }
 
+        [HttpPost]
+        public IActionResult AddRecentGame(int gameid)
+        {
+            Game recentGame = context.Games.Single(c => c.ID == gameid);
+            AddGameToDay(recentGame);
+
+            //this could probably go to a stats page or something
+            //return AddGame();
+            return View("AddGame");
+
+        }
+
         public IActionResult Days()
         {
             List<Day> days = context.Days.Include(g => g.GamesPlayed).ToList();
@@ -172,6 +188,9 @@ namespace GameTracker.Controllers
         //this should take other days eventually
         public void AddGameToDay(Game game, DateTime day = default(DateTime))
         {
+            //adding to a day adds to days played, this makes some assumptions
+            game.DaysPlayed++;
+
             if (day == default(DateTime))
             {
                 day = DateTime.Today;
@@ -182,18 +201,24 @@ namespace GameTracker.Controllers
 
                 newDay.CalendarDate = day;
                 newDay.GamesPlayed.Add(game);
-                
+
 
                 context.Days.Add(newDay);
-                context.SaveChanges();
             }
             else
-            { 
+            {
                 Day oldDay = context.Days.Single(d => d.CalendarDate == day);
                 oldDay.GamesPlayed.Add(game);
+                //under the assumption that this will eventually take dates other than today
+                if (game.MostRecentlyAdded < day)
+                {
+                    game.MostRecentlyAdded = day;
+                }
+
             }
 
-
+            //I hope this can be outside the loops?
+            context.SaveChanges();
             return;
         }
 

@@ -9,36 +9,23 @@
 }
 @*
 @model GameTracker.ViewModels.GameViewModelWrapper
-*@
-@model List<GameTracker.Models.Result>
 
+@model List<GameTracker.Models.Result>
+*@
+@model IList<GameTracker.Models.Game>
+<h2>Search for new games:</h2>
 <form asp-controller="Search" asp-action="Results" method="post">
     <input type="text" name="searchstring">
     <input type="submit" value="Search" />
 </form>
-<p>@ViewBag.Searchstring</p>
-
-@if (ViewBag.Searchstring != null)
+<h2>Recent games:</h2>
+@if (Model != null)
 {
-    @if (Model != null)
-    {
-        <form asp-controller="Search" asp-action="AddGame" method="post">
-            @foreach (var g in Model)
-            {
-                @*
-                <input type="radio" name="gameid" value="@g.id">@g.Name   @g.Original_release_date.ToString("MM/dd/yyyy")
-                *@
-                <input type="radio" name="gameid" value="@g.id">@g.Name   @g.Original_release_date
-                <select name="platformid">
-                    <option selected disabled hidden style='display: none' value=''> -- select an option -- </option>
-                    @foreach (var p in g.Platforms)
-                    {
-                    <option value="@p.ID">@p.Name</option>
-                    }
-                </select>
-                        <br>
-            }
-         <input type="submit" value="Add Game" />
-</form>
-    }
+    <form asp-controller="Search" asp-action="AddRecentGame" method="post">
+                @foreach (var g in Model)
+                {
+                    <p><input type="radio" name="gameid" value="@g.ID" /> @g.Name @g.Original_release_date.ToString("MMMM dd, yyyy") @g.Platform.Name @g.MostRecentlyAdded <img src="@g.GameImages.Icon_url"></p>
+        }
+        <input type="submit" value="Add Recent Game" />
+        </form>
 }

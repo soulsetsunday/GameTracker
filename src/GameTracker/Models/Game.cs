@@ -13,8 +13,7 @@ namespace GameTracker.Models
         public GameImage GameImages { get; set; }
         public DateTime FirstAdded { get; set; }
         public DateTime MostRecentlyAdded { get; set; }
-        public int DaysPlayed { get; set; } = 1;
-        //not great, but atm games are only added if played on a day
+        public int DaysPlayed { get; set; } = 0;
 
         public Platform Platform { get; set; }
 
