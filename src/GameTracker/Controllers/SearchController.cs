@@ -38,24 +38,23 @@ namespace GameTracker.Controllers
         public static int storeIndex;
         //"
         public static DateTime dateForDB;
+        public static DateTime currentWorkingDate;
         public const int mostRecentlyAddedLimit = 5;
 
-        // GET: /<controller>/
         [HttpGet]
         public IActionResult Index(string id)
         {
-            //id is the calendar date
+            //id is the date in a string, it's named id because of routing, maybe look up how to change it
             DateTime calendarDate = new DateTime();
-            DateTime.TryParseExact(id, "M-dd-yyyy", DateTimeFormatInfo.CurrentInfo, DateTimeStyles.None, out calendarDate);
+            DateTime.TryParseExact(id, "MM-dd-yyyy", DateTimeFormatInfo.CurrentInfo, DateTimeStyles.None, out calendarDate);
+            //TODO: if this is null, make it today
             ViewBag.date = calendarDate;
-                //This should get a list of all games and platforms from database
-                IList<Game> games = context.Games.Include(c => c.Platform).Include(i => i.GameImages).OrderByDescending(x => x.MostRecentlyAdded).Take(mostRecentlyAddedLimit).ToList();
-            int checkgamesstate = 4;
+            currentWorkingDate = calendarDate;
+
+            IList<Game> games = context.Games.Include(c => c.Platform).Include(i => i.GameImages).OrderByDescending(x => x.MostRecentlyAdded).Take(mostRecentlyAddedLimit).ToList();
             return View(games);
         }
 
-        //this was changed because Index also needed to recieve a string, having this redirect to index
-        //is probably not great.
         [HttpPost]
         public IActionResult Results(string searchstring)
         {
@@ -71,7 +70,6 @@ namespace GameTracker.Controllers
             //wrap.Viewmodels = MakeGameList(searchResults);
             resultList = searchResults.Results;
 
-            //return View("Index", resultList);
             return View(resultList);
         }
 
@@ -126,8 +124,9 @@ namespace GameTracker.Controllers
                             Name = resultList[i].Name,
                             Original_release_date = DateTime.Parse(resultList[i].Original_release_date),
                             Platform = tempPlatform,
-                            FirstAdded = DateTime.Today,
-                            MostRecentlyAdded = DateTime.Today,
+                            //These should probably be in addgametoday
+                            FirstAdded = currentWorkingDate,
+                            MostRecentlyAdded = currentWorkingDate,
 
                         };
 
@@ -146,7 +145,7 @@ namespace GameTracker.Controllers
                     context.Games.Add(newDBGame);
                     context.SaveChanges();
                     //add the game to a day
-                    AddGameToDay(context.Games.Single(c => c.Name == resultList[i].Name));
+                    AddGameToDay(context.Games.Single(c => c.Name == resultList[i].Name), currentWorkingDate);
 
                    
                 }
@@ -160,8 +159,8 @@ namespace GameTracker.Controllers
 
         public IActionResult AddGame()
         {
+            //this was for early testing, after adding a game maybe redirect to chart
             IList<Game> games = context.Games.Include(i => i.GameImages).Include(p => p.Platform).ToList();
-            int checkwhatgameslooklike = 4;
             return View(games);
         }
 
@@ -169,7 +168,7 @@ namespace GameTracker.Controllers
         public IActionResult AddRecentGame(int gameid)
         {
             Game recentGame = context.Games.Single(c => c.ID == gameid);
-            AddGameToDay(recentGame);
+            AddGameToDay(recentGame, currentWorkingDate);
 
             //this could probably go to a stats page or something
             //return AddGame();

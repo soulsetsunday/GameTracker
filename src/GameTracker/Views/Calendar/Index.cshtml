@@ -31,7 +31,7 @@
     {
         @if (date == CalendarTesting2.ViewModels.ViewCalendar.thisDay.Day)
         {
-            <li><span class="active"><a asp-controller="Search" asp-action="Index" asp-route-id="@CalendarTesting2.ViewModels.ViewCalendar.thisDay.ToString("M-dd-yyyy")" >@date</a></span></li>
+            <li><span class="active"><a asp-controller="Search" asp-action="Index" asp-route-id="@CalendarTesting2.ViewModels.ViewCalendar.thisDay.ToString("MM-dd-yyyy")" >@date</a></span></li>
         }
         else
         { 

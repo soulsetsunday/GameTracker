@@ -4,6 +4,7 @@
     Ideally this will have a searchbox, calendar, maybe list of games/second calendar on side
     Model will likely be list of games
     look into partial views?
+    Search index
 *@
 @{
 }
@@ -13,6 +14,8 @@
 @model List<GameTracker.Models.Result>
 *@
 @model IList<GameTracker.Models.Game>
+<p>Adding games to @ViewBag.date.ToString("MMMM dd, yyyy"):</p>
+
 <h2>Search for new games:</h2>
 <form asp-controller="Search" asp-action="Results" method="post">
     <input type="text" name="searchstring">
