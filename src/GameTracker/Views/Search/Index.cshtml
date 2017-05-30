@@ -21,7 +21,7 @@
     <input type="text" name="searchstring">
     <input type="submit" value="Search" />
 </form>
-<h2>Recent games:</h2>
+<h2>Recent games: <a asp-controller="Search" asp-action="AllGames">click here for all games</a> </h2>
 @if (Model != null)
 {
     <form asp-controller="Search" asp-action="AddRecentGame" method="post">

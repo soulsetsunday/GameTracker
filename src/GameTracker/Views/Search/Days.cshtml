@@ -10,12 +10,12 @@
     {
         foreach (var d in Model)
         { 
-            <p>@d.CalendarDate</p>
+            <p>Date: @d.CalendarDate</p>
         foreach (var g in d.GamesPlayed)
         {
-            <p>@g.Name</p>
-            <p>@g.DaysPlayed</p>
-            <p>@g.MostRecentlyAdded</p>
+            <p>Name: @g.Name</p>
+            <p>Days played: @g.DaysPlayed</p>
+            <p>Most recently added: @g.MostRecentlyAdded</p>
 
         }
     }

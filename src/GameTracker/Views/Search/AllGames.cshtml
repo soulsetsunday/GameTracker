@@ -1,0 +1,38 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model IList<GameTracker.Models.Game>
+<h2>All Games:</h2>
+@if (Model != null)
+{
+    <form asp-controller="Search" asp-action="AddRecentGame" method="post">
+        <div class="table">
+            <div class="thead">
+                <div class="tr">
+                    <div class="td"></div>
+                    <div class="td">Name</div>
+                    <div class="td">Release Date</div>
+                    <div class="td">Platform</div>
+                    <div class="td">Last Added</div>
+                    <div class="td"></div>
+                </div>
+            </div>
+
+            @foreach (var g in Model)
+            {
+
+                <div class="tr">
+                    <div class="td"><input type="radio" name="gameid" value="@g.ID" /> </div>
+                    <div class="td">@g.Name </div>
+                    <div class="td">@g.Original_release_date.ToString("MMMM dd, yyyy") </div>
+                    <div class="td">@g.Platform.Name </div>
+                    <div class="td">@g.MostRecentlyAdded.ToString("MM/dd/yy") </div>
+                    <div class="td"><img src="@g.GameImages.Icon_url"></div>
+                </div>
+            }
+        </div>
+        <input type="submit" value="Add Recent Game" />
+    </form>
+}

@@ -27,7 +27,7 @@ namespace GameTracker.Controllers
         }
 
         private string url = "http://headers.jsontest.com/";
-        private string privateapikey = "figureoutlater";
+        private string privateapikey = LoadAPI();
         public static List<Game> mainGameList = new List<Game>();
         public static GameViewModelWrapper wrap = new GameViewModelWrapper();
         //static to hopefully pass values around
@@ -59,6 +59,7 @@ namespace GameTracker.Controllers
         public IActionResult Results(string searchstring)
         {
             ViewBag.Searchstring = searchstring;
+            ViewBag.APItest = privateapikey;
             // Temporary thing
             RootObject searchResults = LoadJson();
             // Take search results, strip games out, make list
@@ -80,10 +81,10 @@ namespace GameTracker.Controllers
             //all of this should be eslewhere
             //TODO: check if game is already in database
 
-                for (int i=0; i < resultList.Count; i++ )
+            for (int i = 0; i < resultList.Count; i++)
+            {
+                if (resultList[i].id == gameid)
                 {
-                    if (resultList[i].id == gameid)
-                    {
                     storeIndex = i;
 
                     int loopcheck1 = 0;
@@ -101,7 +102,7 @@ namespace GameTracker.Controllers
                             //var testing4 = context.Platforms.SingleOrDefault(c => c.Name == resultList[i].Platforms[j].Name).Name;
                             //if (context.Platforms.SingleOrDefault(c => c.Name == resultList[i].Platforms[j].Name).Name == null || resultList[i].Platforms[j].Name != context.Platforms.SingleOrDefault(c => c.Name == resultList[i].Platforms[j].Name).Name)
                             if (!context.Platforms.Any(s => s.Name == resultList[i].Platforms[j].Name))
-                            { 
+                            {
                                 Platform newPlatform = new Platform
                                 {
                                     Name = resultList[i].Platforms[j].Name,
@@ -116,19 +117,19 @@ namespace GameTracker.Controllers
                                 tempPlatform = context.Platforms.Single(c => c.Name == resultList[i].Platforms[j].Name);
                             };
                         }
-                   }
+                    }
                     //end of platform part
 
-                        Game newDBGame = new Game
-                        {
-                            Name = resultList[i].Name,
-                            Original_release_date = DateTime.Parse(resultList[i].Original_release_date),
-                            Platform = tempPlatform,
-                            //These should probably be in addgametoday
-                            FirstAdded = currentWorkingDate,
-                            MostRecentlyAdded = currentWorkingDate,
+                    Game newDBGame = new Game
+                    {
+                        Name = resultList[i].Name,
+                        Original_release_date = DateTime.Parse(resultList[i].Original_release_date),
+                        Platform = tempPlatform,
+                        //These should probably be in addgametoday
+                        FirstAdded = currentWorkingDate,
+                        MostRecentlyAdded = currentWorkingDate,
 
-                        };
+                    };
 
                     Type type = typeof(Image);
                     PropertyInfo[] properties = type.GetProperties();
@@ -147,9 +148,9 @@ namespace GameTracker.Controllers
                     //add the game to a day
                     AddGameToDay(context.Games.Single(c => c.Name == resultList[i].Name), currentWorkingDate);
 
-                   
+
                 }
-                }
+            }
 
 
             IList<Game> games = context.Games.Include(i => i.GameImages).Include(p => p.Platform).ToList();
@@ -174,6 +175,12 @@ namespace GameTracker.Controllers
             //return AddGame();
             return View("AddGame");
 
+        }
+
+        public IActionResult AllGames()
+        {
+            IList<Game> games = context.Games.Include(c => c.Platform).Include(i => i.GameImages).OrderByDescending(x => x.MostRecentlyAdded).ToList();
+            return View(games);
         }
 
         public IActionResult Days()
@@ -232,6 +239,15 @@ namespace GameTracker.Controllers
             return result;
         }
 
+        //the file locations here will be an issue
+        static string LoadAPI()
+        {
+            using (StreamReader r = System.IO.File.OpenText("/Data/apikey.txt"))
+            {
+                string api = r.ReadToEnd();
+                return api;
+            }
+        }
 
         public RootObject LoadJson()
         {

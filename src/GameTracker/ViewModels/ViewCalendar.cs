@@ -29,11 +29,18 @@ namespace CalendarTesting2.ViewModels
                 count++;
             }
 
-            //this was i = 1 and count +1 for console formatting
             for (int i = 0; i < (daysinmonth + count); i++)
             {
-                returnList.Add(topWeek.Day);
-                topWeek = topWeek.AddDays(1);
+                if (i < count)
+                {
+                    returnList.Add(0);
+                    topWeek = topWeek.AddDays(1);
+                }
+                else
+                {
+                    returnList.Add(topWeek.Day);
+                    topWeek = topWeek.AddDays(1);
+                }
             }
 
             return returnList;

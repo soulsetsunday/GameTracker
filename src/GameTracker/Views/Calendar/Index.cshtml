@@ -29,13 +29,20 @@
 
     @foreach (int date in CalendarTesting2.ViewModels.ViewCalendar.GenCalendar())
     {
-        @if (date == CalendarTesting2.ViewModels.ViewCalendar.thisDay.Day)
+        @if (date == 0)
         {
-            <li><span class="active"><a asp-controller="Search" asp-action="Index" asp-route-id="@CalendarTesting2.ViewModels.ViewCalendar.thisDay.ToString("MM-dd-yyyy")" >@date</a></span></li>
+            <li></li>
         }
         else
         { 
-        <li>@date</li>
+            @if (date == CalendarTesting2.ViewModels.ViewCalendar.thisDay.Day)
+            {
+                <li><span class="active"><a asp-controller="Search" asp-action="Index" asp-route-id="@CalendarTesting2.ViewModels.ViewCalendar.thisDay.ToString("MM-dd-yyyy")" >@date</a></span></li>
+            }
+            else
+            {
+            <li>@date</li>
+            }
         }
     }
 </ul>
