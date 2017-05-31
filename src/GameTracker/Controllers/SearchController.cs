@@ -20,13 +20,14 @@ namespace GameTracker.Controllers
     public class SearchController : Controller
     {
         private GameDbContext context;
+        private static readonly HttpClient HttpClient = new HttpClient();
 
         public SearchController(GameDbContext dbContext)
         {
             context = dbContext;
         }
 
-        private string url = "http://headers.jsontest.com/";
+        private const string apiFileLocation = "/Data/apikey.txt";
         private string privateapikey = LoadAPI();
         public static List<Game> mainGameList = new List<Game>();
         public static GameViewModelWrapper wrap = new GameViewModelWrapper();
@@ -56,19 +57,14 @@ namespace GameTracker.Controllers
         }
 
         [HttpPost]
-        public IActionResult Results(string searchstring)
+        public async Task<IActionResult> Results(string searchstring)
         {
             ViewBag.Searchstring = searchstring;
-            ViewBag.APItest = privateapikey;
             // Temporary thing
-            RootObject searchResults = LoadJson();
-            // Take search results, strip games out, make list
-            //GameViewModelWrapper wrap = new GameViewModelWrapper();
-            //List<GameViewModel> gameList = MakeGameList(searchResults);
-            //TempData["GVM"] = MakeGameList(searchResults);
-            //TODO: Remove MakeGameList and have view and static thing use rootobject
-            //Maybe just send the list of results from rootobject, actual rootobject doesn't seem that useful
-            //wrap.Viewmodels = MakeGameList(searchResults);
+            //RootObject searchResults = LoadJson();
+            string response = await GetTestObjects(searchstring);
+            RootObject searchResults = JsonConvert.DeserializeObject<RootObject>(response);
+
             resultList = searchResults.Results;
 
             return View(resultList);
@@ -228,21 +224,25 @@ namespace GameTracker.Controllers
             return;
         }
 
+        //this is a total mess
         private async Task<String> GetTestObjects(string searchstring)
         {
             string url2 = $@"http://www.giantbomb.com/api/search/?api_key={privateapikey}&format=json&query='{searchstring}'&resources=game";
-            var httpClient = new HttpClient();
-            httpClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "Game tracking demo thing");
-            var response = await httpClient.GetAsync(url2);
+            //per documentation, use one static httpclient per app
+            HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "Game tracking demo thing");
+            var response = await HttpClient.GetAsync(url2);
             var result = await response.Content.ReadAsStringAsync();
+            ViewBag.urltest = url2;
 
             return result;
         }
 
+
+
         //the file locations here will be an issue
         static string LoadAPI()
         {
-            using (StreamReader r = System.IO.File.OpenText("/Data/apikey.txt"))
+            using (StreamReader r = System.IO.File.OpenText(apiFileLocation))
             {
                 string api = r.ReadToEnd();
                 return api;
