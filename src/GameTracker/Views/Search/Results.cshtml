@@ -19,6 +19,8 @@
         <form asp-controller="Search" asp-action="AddGame" method="post">
             @foreach (var g in Model)
             {
+                @if (g.Platforms != null)
+                {
                 <input type="radio" name="gameid" value="@g.id">@g.Name   @g.Original_release_date
                 <select name="platformid">
                     <option selected disabled hidden style='display: none' value=''> -- select an option -- </option>
@@ -28,7 +30,8 @@
                     }
                 </select>
                 <br>
-            }
+                 }
+             }
             <input type="submit" value="Add Game" />
         </form>
     }

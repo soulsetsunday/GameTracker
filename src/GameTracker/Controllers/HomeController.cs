@@ -61,7 +61,7 @@ namespace GameTracker.Controllers
         public IActionResult SearchBox(string searchstring)
         {
             ViewBag.Searchstring = searchstring;
-            //ViewBag.Json = GetTestObjects(searchstring).Result;
+            //ViewBag.Json = SendSearchRequest(searchstring).Result;
             ViewBag.Items = LoadJson();
             // Temporary thing
             RootObject searchResults = LoadJson();
@@ -70,7 +70,7 @@ namespace GameTracker.Controllers
 
             // Actual search code, commented out for now
             // Sends search, returns raw json
-            //var rawsearchresults = GetTestObjects(searchstring).Result;
+            //var rawsearchresults = SendSearchRequest(searchstring).Result;
             // parses json
             //RootObject searchitems = JsonConvert.DeserializeObject<RootObject>(rawsearchresults);
 

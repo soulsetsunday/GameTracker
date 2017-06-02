@@ -62,7 +62,9 @@ namespace GameTracker.Controllers
             ViewBag.Searchstring = searchstring;
             // Temporary thing
             //RootObject searchResults = LoadJson();
-            string response = await GetTestObjects(searchstring);
+
+            //actual loading
+            string response = await SendSearchRequest(searchstring);
             RootObject searchResults = JsonConvert.DeserializeObject<RootObject>(response);
 
             resultList = searchResults.Results;
@@ -225,7 +227,7 @@ namespace GameTracker.Controllers
         }
 
         //this is a total mess
-        private async Task<String> GetTestObjects(string searchstring)
+        private async Task<String> SendSearchRequest(string searchstring)
         {
             string url2 = $@"http://www.giantbomb.com/api/search/?api_key={privateapikey}&format=json&query='{searchstring}'&resources=game";
             //per documentation, use one static httpclient per app
@@ -249,9 +251,10 @@ namespace GameTracker.Controllers
             }
         }
 
+        //loads test json files to parse
         public RootObject LoadJson()
         {
-            using (StreamReader r = System.IO.File.OpenText("/Data/file2.json"))
+            using (StreamReader r = System.IO.File.OpenText("/Data/eternal.json"))
             {
                 string json = r.ReadToEnd();
                 RootObject items = JsonConvert.DeserializeObject<RootObject>(json);
@@ -259,29 +262,13 @@ namespace GameTracker.Controllers
             }
         }
 
-        //pass rootobject, return a list of games
-        //this is a list of viewmodels plus a list of platforms
-        //the rootobject.result(i.e. the game) comes with a list of platforms
-        //No idea why I wanted to do this, just use the rootobject
-        //The notable thing it did was parse the release date into a DateTime
-        public List<GameViewModel> MakeGameList(RootObject root)
+        //this is a debugging thing, remove
+        public void TestJson()
         {
-            List<GameViewModel> gList = new List<GameViewModel>();
-            foreach (var g in root.Results)
-            {
+            RootObject test = LoadJson();
+            int i = 4;
+            return;
 
-                GameViewModel ng = new GameViewModel
-                {
-                    Name = g.Name,
-                    Original_release_date = DateTime.Parse(g.Original_release_date),
-                    //Image = g.Image,
-                    Platforms = g.Platforms
-                };
-                gList.Add(ng);
-
-
-            }
-            return gList;
         }
     } 
 }
