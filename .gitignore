@@ -242,3 +242,4 @@ ModelManifest.xml
 .fake/
 /src/GameTracker/Views/Search/Index2.txt
 /src/GameTracker/Data/apikey.txt
+/src/GameTracker/Migrations/IdentityDb

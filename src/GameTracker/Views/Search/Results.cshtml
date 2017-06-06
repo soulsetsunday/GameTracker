@@ -2,7 +2,10 @@
     For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
+    DateTime thisDay = new DateTime();
 }
+@using System.Globalization;
+
 @model List<GameTracker.Models.Result>
 
 <form asp-controller="Search" asp-action="Results" method="post">
@@ -17,22 +20,44 @@
     @if (Model != null)
     {
         <form asp-controller="Search" asp-action="AddGame" method="post">
-            @foreach (var g in Model)
-            {
-                @if (g.Platforms != null)
+            <div class="table">
+                <div class="thead">
+                    <div class="tr">
+                        <div class="td">Name</div>
+                        <div class="td">Release Date</div>
+                        <div class="td">Platform</div>
+                        <div class="td"></div>
+                    </div>
+                </div>
+                @foreach (var g in Model)
                 {
-                <input type="radio" name="gameid" value="@g.id">@g.Name   @g.Original_release_date
-                <select name="platformid">
-                    <option selected disabled hidden style='display: none' value=''> -- select an option -- </option>
-                    @foreach (var p in g.Platforms)
+                    @if (g.Platforms != null)
                     {
-                        <option value="@p.ID">@p.Name</option>
-                    }
-                </select>
-                <br>
-                 }
-             }
-            <input type="submit" value="Add Game" />
-        </form>
+                        <div class="tr">
+                            <div class="td"> <input type="radio" name="gameid" value="@g.id">@g.Name   </div>
+                            @if (DateTime.TryParseExact(g.Original_release_date, "yyyy-MM-dd hh:mm:ss", DateTimeFormatInfo.CurrentInfo, @DateTimeStyles.None, out thisDay))
+                            {
+                            <div class="td">@thisDay.ToString("MMMM dd, yyyy")</div>
+                            }
+                            else
+                            {
+                            <div class="td">@g.Original_release_date</div>
+                            }
+                            <div class="td">
+                                <select name="platformid">
+                                    <option selected disabled hidden style='display: none' value=''> -- select an option -- </option>
+                                    @foreach (var p in g.Platforms)
+                            {
+                                        <option value="@p.ID">@p.Name</option>
+                                    }
+                                </select>
+                                </div>
+                            <div class="td"><img src="@g.Image.Icon_url"></div>
+                            </div>
+                                }
+                                }
+                            </div>
+                <input type="submit" value="Add Game" />
+</form>
     }
 }
