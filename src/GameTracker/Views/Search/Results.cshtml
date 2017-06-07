@@ -6,7 +6,7 @@
 }
 @using System.Globalization;
 
-@model List<GameTracker.Models.Result>
+@model GameTracker.Models.RootObject
 
 <form asp-controller="Search" asp-action="Results" method="post">
     <input type="text" name="searchstring">
@@ -29,7 +29,7 @@
                         <div class="td"></div>
                     </div>
                 </div>
-                @foreach (var g in Model)
+                @foreach (var g in Model.Results)
                 {
                     @if (g.Platforms != null)
                     {

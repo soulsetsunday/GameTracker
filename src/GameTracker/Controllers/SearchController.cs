@@ -67,9 +67,7 @@ namespace GameTracker.Controllers
             string response = await SendSearchRequest(searchstring);
             RootObject searchResults = JsonConvert.DeserializeObject<RootObject>(response);
 
-            resultList = searchResults.Results;
-
-            return View(resultList);
+            return View(searchResults);
         }
 
         [HttpPost]
@@ -227,7 +225,7 @@ namespace GameTracker.Controllers
         }
 
         //this is a total mess
-        private async Task<String> SendSearchRequest(string searchstring)
+        private async Task<String> SendSearchRequest(string searchstring, int offset = 0)
         {
             string url2 = $@"http://www.giantbomb.com/api/search/?api_key={privateapikey}&format=json&query='{searchstring}'&resources=game";
             //per documentation, use one static httpclient per app
