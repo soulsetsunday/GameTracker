@@ -33,6 +33,7 @@ namespace GameTracker.Controllers
         public static GameViewModelWrapper wrap = new GameViewModelWrapper();
         //static to hopefully pass values around
         public static List<Result> resultList = new List<Result>();
+        public static RootObject searchResults = new RootObject();
         //try 2, static to pass around controller, list of results from rootobject
         public static Platform tempPlatform = new Platform();
         //Really bad form, probably 
@@ -65,7 +66,7 @@ namespace GameTracker.Controllers
 
             //actual loading
             string response = await SendSearchRequest(searchstring);
-            RootObject searchResults = JsonConvert.DeserializeObject<RootObject>(response);
+            searchResults = JsonConvert.DeserializeObject<RootObject>(response);
 
             return View(searchResults);
         }
@@ -75,42 +76,43 @@ namespace GameTracker.Controllers
         {
             //no model valedation, maybe later
             //all of this should be eslewhere
+            //atm this is using a static RootObject
             //TODO: check if game is already in database
 
-            for (int i = 0; i < resultList.Count; i++)
+            for (int i = 0; i < searchResults.Results.Count; i++)
             {
-                if (resultList[i].id == gameid)
+                if (searchResults.Results[i].id == gameid)
                 {
                     storeIndex = i;
 
                     int loopcheck1 = 0;
-                    var loopcheck2 = resultList[i].Platforms.Count;
-                    for (int j = 0; j < resultList[i].Platforms.Count; j++)
+                    var loopcheck2 = searchResults.Results[i].Platforms.Count;
+                    for (int j = 0; j < searchResults.Results[i].Platforms.Count; j++)
                     {
-                        var loopcheck3 = resultList[i].Platforms[j].ID;
-                        if (resultList[i].Platforms[j].ID == platformid)
+                        var loopcheck3 = searchResults.Results[i].Platforms[j].ID;
+                        if (searchResults.Results[i].Platforms[j].ID == platformid)
                         {
                             //SingleOrDefault instead of single to prevent null exceptions
                             var testing2 = context.Platforms;
                             //var testing = context.Platforms.FirstOrDefault(c => c.Name == resultList[i].Platforms[j].Name).Name;
-                            var testing3 = resultList[i].Platforms[j].Name;
+                            var testing3 = searchResults.Results[i].Platforms[j].Name;
                             var testing5 = context.Platforms.Any(s => s.Name == testing3);
                             //var testing4 = context.Platforms.SingleOrDefault(c => c.Name == resultList[i].Platforms[j].Name).Name;
                             //if (context.Platforms.SingleOrDefault(c => c.Name == resultList[i].Platforms[j].Name).Name == null || resultList[i].Platforms[j].Name != context.Platforms.SingleOrDefault(c => c.Name == resultList[i].Platforms[j].Name).Name)
-                            if (!context.Platforms.Any(s => s.Name == resultList[i].Platforms[j].Name))
+                            if (!context.Platforms.Any(s => s.Name == searchResults.Results[i].Platforms[j].Name))
                             {
                                 Platform newPlatform = new Platform
                                 {
-                                    Name = resultList[i].Platforms[j].Name,
+                                    Name = searchResults.Results[i].Platforms[j].Name,
                                 };
                                 context.Platforms.Add(newPlatform);
                                 context.SaveChanges();
                                 //figure out how to do this
-                                tempPlatform = context.Platforms.Single(c => c.Name == resultList[i].Platforms[j].Name);
+                                tempPlatform = context.Platforms.Single(c => c.Name == searchResults.Results[i].Platforms[j].Name);
                             }
                             else
                             {
-                                tempPlatform = context.Platforms.Single(c => c.Name == resultList[i].Platforms[j].Name);
+                                tempPlatform = context.Platforms.Single(c => c.Name == searchResults.Results[i].Platforms[j].Name);
                             };
                         }
                     }
@@ -118,8 +120,8 @@ namespace GameTracker.Controllers
 
                     Game newDBGame = new Game
                     {
-                        Name = resultList[i].Name,
-                        Original_release_date = DateTime.Parse(resultList[i].Original_release_date),
+                        Name = searchResults.Results[i].Name,
+                        Original_release_date = DateTime.Parse(searchResults.Results[i].Original_release_date),
                         Platform = tempPlatform,
                         //These should probably be in addgametoday
                         FirstAdded = currentWorkingDate,
@@ -131,33 +133,34 @@ namespace GameTracker.Controllers
                     PropertyInfo[] properties = type.GetProperties();
                     foreach (PropertyInfo property in properties)
                     {
-                        var gv = resultList[i].Image;
-                        var altv = resultList[i].Image.GetType().GetProperty("Icon_url").GetValue(gv, null);
+                        var gv = searchResults.Results[i].Image;
+                        var altv = searchResults.Results[i].Image.GetType().GetProperty("Icon_url").GetValue(gv, null);
                         var tryname = property.Name;
-                        var svalue2 = resultList[i].Image.GetType().GetProperty(tryname).GetValue(gv, null);
-                        //var svalue = resultList[i].Image.GetType().GetProperty("property.Name").GetValue(gv, null);
+                        var svalue2 = searchResults.Results[i].Image.GetType().GetProperty(tryname).GetValue(gv, null);
+                        //var svalue = searchResults.Results[i].Image.GetType().GetProperty("property.Name").GetValue(gv, null);
                         newDBGame.GameImages.GetType().GetProperty(property.Name).SetValue(newDBGame.GameImages, svalue2);
                     }
 
                     context.Games.Add(newDBGame);
                     context.SaveChanges();
                     //add the game to a day
-                    AddGameToDay(context.Games.Single(c => c.Name == resultList[i].Name), currentWorkingDate);
+                    AddGameToDay(context.Games.Single(c => c.Name == searchResults.Results[i].Name), currentWorkingDate);
 
 
                 }
             }
 
 
-            IList<Game> games = context.Games.Include(i => i.GameImages).Include(p => p.Platform).ToList();
+            IList<Game> games = context.Games.Include(i => i.GameImages).Include(p => p.Platform).OrderByDescending(x => x.MostRecentlyAdded).ToList();
 
             return View(games);
+            //mabe redirect to chart
         }
 
         public IActionResult AddGame()
         {
-            //this was for early testing, after adding a game maybe redirect to chart
-            IList<Game> games = context.Games.Include(i => i.GameImages).Include(p => p.Platform).ToList();
+            //the get version of this for testing
+            IList<Game> games = context.Games.Include(i => i.GameImages).Include(p => p.Platform).OrderByDescending(x => x.MostRecentlyAdded).ToList();
             return View(games);
         }
 
@@ -169,7 +172,8 @@ namespace GameTracker.Controllers
 
             //this could probably go to a stats page or something
             //return AddGame();
-            return View("AddGame");
+            IList<Game> games = context.Games.Include(i => i.GameImages).Include(p => p.Platform).OrderByDescending(x => x.MostRecentlyAdded).ToList();
+            return View("AddGame", games);
 
         }
 

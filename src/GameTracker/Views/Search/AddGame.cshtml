@@ -5,11 +5,28 @@
 }
 
 @model IList<GameTracker.Models.Game>
-<h1>Add Page</h1>
+<h1>Most recently added: @Model[0].Name</h1>
 @if (Model != null)
-{ 
-    foreach (var g in Model)
-    {
-        <p>@g.Name @g.Original_release_date.ToString("MMMM dd, yyyy") @g.Platform.Name @g.MostRecentlyAdded <img src="@g.GameImages.Icon_url"></p>
-    }
+{
+    <div class="table">
+        <div class="thead">
+            <div class="tr">
+                <div class="td">Name</div>
+                <div class="td">Release Date</div>
+                <div class="td">Platform</div>
+                <div class="td">Last Added</div>
+                <div class="td"></div>
+                </div>
+        </div>
+        @foreach (var g in Model)
+        {
+            <div class="tr">
+                <div class="td">@g.Name </div>
+                <div class="td">@g.Original_release_date.ToString("MMMM dd, yyyy") </div>
+                <div class="td">@g.Platform.Name </div>
+                <div class="td">@g.MostRecentlyAdded.ToString("MM/dd/yyyy")</div>
+                <div class="td"><img src="@g.GameImages.Icon_url"></div>
+                </div>
+        }
+        </div>
 }
