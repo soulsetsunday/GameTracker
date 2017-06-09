@@ -28,7 +28,7 @@
 
 <ul class="days">
 
-    @foreach (int date in CalendarTesting2.ViewModels.ViewCalendar.GenCalendar())
+    @foreach (int date in CalendarTesting2.ViewModels.ViewCalendar.GenCalendar(Model))
     {
         @if (date == 0)
         {
