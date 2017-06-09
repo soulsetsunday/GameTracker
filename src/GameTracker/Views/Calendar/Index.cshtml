@@ -6,8 +6,15 @@
 @model DateTime
 <div class="month">
     <ul>
-        <li class="prev">&#10094;</li>
+        <li class="prev"><a asp-controller="Calendar" asp-action="Index" asp-route-id="@Model.AddMonths(-1).ToString("MM-dd-yyyy")">&#10094;</a></li>
+        @if (Model.Month == DateTime.Today.Month)
+        {
         <li class="next">&#10095;</li>
+        }
+        else
+        { 
+        <li class="next"><a asp-controller="Calendar" asp-action="Index" asp-route-id="@Model.AddMonths(1).ToString("MM-dd-yyyy")">&#10095;</a></li>
+        }
         <li>
             @Model.ToString("MMMM")<br>
             <span style="font-size:18px">@Model.ToString("yyyy")</span>
