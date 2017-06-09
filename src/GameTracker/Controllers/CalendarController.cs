@@ -11,9 +11,14 @@ namespace GameTracker.Controllers
     public class CalendarController : Controller
     {
         // GET: /<controller>/
-        public IActionResult Index()
+        public IActionResult Index(DateTime? sentDate = null)
         {
-            return View();
+            //according to Stackoverflow, default(DateTime) causing an exception here is a bug
+
+            if (sentDate == null)
+                sentDate = DateTime.Today;
+
+            return View(sentDate);
         }
     }
 }

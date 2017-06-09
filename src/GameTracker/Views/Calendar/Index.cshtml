@@ -3,13 +3,14 @@
 *@
 @{
 }
+@model DateTime
 <div class="month">
     <ul>
         <li class="prev">&#10094;</li>
         <li class="next">&#10095;</li>
         <li>
-            @CalendarTesting2.ViewModels.ViewCalendar.thisDay.ToString("MMMM")<br>
-            <span style="font-size:18px">@CalendarTesting2.ViewModels.ViewCalendar.thisDay.ToString("yyyy")</span>
+            @Model.ToString("MMMM")<br>
+            <span style="font-size:18px">@Model.ToString("yyyy")</span>
         </li>
     </ul>
 </div>
@@ -35,9 +36,9 @@
         }
         else
         { 
-            @if (date == CalendarTesting2.ViewModels.ViewCalendar.thisDay.Day)
+            @if (Model == DateTime.Today && date == Model.Day)
             {
-                <li><span class="active"><a asp-controller="Search" asp-action="Index" asp-route-id="@CalendarTesting2.ViewModels.ViewCalendar.thisDay.ToString("MM-dd-yyyy")" >@date</a></span></li>
+                <li><span class="active"><a asp-controller="Search" asp-action="Index" asp-route-id="@Model.ToString("MM-dd-yyyy")" >@date</a></span></li>
             }
             else
             {
