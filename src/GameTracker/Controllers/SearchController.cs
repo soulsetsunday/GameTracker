@@ -216,11 +216,11 @@ namespace GameTracker.Controllers
                 Day oldDay = context.Days.Single(d => d.CalendarDate == day);
                 oldDay.GamesPlayed.Add(game);
                 //under the assumption that this will eventually take dates other than today
-                if (game.MostRecentlyAdded < day)
-                {
-                    game.MostRecentlyAdded = day;
-                }
+            }
 
+            if (game.MostRecentlyAdded < day)
+            {
+                game.MostRecentlyAdded = day;
             }
 
             //I hope this can be outside the loops?
