@@ -7,6 +7,7 @@
 @{
     float highestdayswidth = 300;
     float highestdaycount = Model[0].DaysPlayed;
+    string dateFormat = "MM/dd/yyyy";
 }
 
 <table cellspacing="0" cellpadding="0">
@@ -26,7 +27,7 @@
             <td class="value first">
                 <img src="~/images/bar.png" alt="" width="@highestdayswidth" height="16">@Model[i].DaysPlayed
             </td>
-                    <td>@Model[i].MostRecentlyAdded</td>
+                    <td>@Model[i].MostRecentlyAdded.ToString(dateFormat)</td>
                     </tr>
             }
             else if (i == (Model.Count - 1))//this is probably wrong, maybe needs &&
@@ -37,7 +38,7 @@
                 <td class="value last">
                     <img src="~/images/bar.png" alt="" width="@(highestdayswidth/(highestdaycount/Model[i].DaysPlayed))" height="16">@Model[i].DaysPlayed
                 </td>
-                    <td>@Model[i].MostRecentlyAdded</td>
+                    <td>@Model[i].MostRecentlyAdded.ToString(dateFormat)</td>
                     </tr>
             }
             else
@@ -48,7 +49,7 @@
                 <td class="value">
                     <img src="~/images/bar.png" alt="" width="@(highestdayswidth/(highestdaycount/Model[i].DaysPlayed))" height="16">@Model[i].DaysPlayed
                 </td>
-                    <td>@Model[i].MostRecentlyAdded</td>
+                    <td>@Model[i].MostRecentlyAdded.ToString(dateFormat)</td>
                     </tr>
             }
         }

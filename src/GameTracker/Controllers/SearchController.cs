@@ -191,7 +191,6 @@ namespace GameTracker.Controllers
 
         //this needs to be elsewhere
         //can't pass DateTime.Today, nullable DateTime would need to be converted 
-        //this should take other days eventually
         public void AddGameToDay(Game game, DateTime day = default(DateTime))
         {
             //adding to a day adds to days played, this makes some assumptions

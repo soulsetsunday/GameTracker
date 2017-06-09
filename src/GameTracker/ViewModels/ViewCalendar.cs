@@ -9,8 +9,8 @@ namespace CalendarTesting2.ViewModels
 {
     public class ViewCalendar
     {
-        public static DateTime thisDay = DateTime.Today;
-        public static Calendar myCal = CultureInfo.InvariantCulture.Calendar;
+        //public static DateTime thisDay = DateTime.Today;
+        //public static Calendar myCal = CultureInfo.InvariantCulture.Calendar;
         //public static int daysinmonth = myCal.GetDaysInMonth(myCal.GetYear(thisDay), myCal.GetMonth(thisDay));
         //public static DateTime startOfMonth = new DateTime(myCal.GetYear(thisDay), myCal.GetMonth(thisDay), 1);
         //public List<int> dates = GenCalendar();
@@ -22,6 +22,7 @@ namespace CalendarTesting2.ViewModels
             if (sentDate == default(DateTime))
                 sentDate = DateTime.Today;
 
+            Calendar myCal = CultureInfo.InvariantCulture.Calendar;
             int daysinmonth = myCal.GetDaysInMonth(myCal.GetYear(sentDate), myCal.GetMonth(sentDate));
             DateTime startOfMonth = new DateTime(myCal.GetYear(sentDate), myCal.GetMonth(sentDate), 1);
 
