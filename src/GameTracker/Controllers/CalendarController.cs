@@ -14,7 +14,6 @@ namespace GameTracker.Controllers
         // GET: /<controller>/
         public IActionResult Index(string id = null)
         {
-            //according to Stackoverflow, default(DateTime) causing an exception here is a bug
 
             DateTime sentDate = new DateTime();
 

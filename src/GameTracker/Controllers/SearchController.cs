@@ -93,10 +93,10 @@ namespace GameTracker.Controllers
                         if (searchResults.Results[i].Platforms[j].ID == platformid)
                         {
                             //SingleOrDefault instead of single to prevent null exceptions
-                            var testing2 = context.Platforms;
+                            //var testing2 = context.Platforms;
                             //var testing = context.Platforms.FirstOrDefault(c => c.Name == resultList[i].Platforms[j].Name).Name;
-                            var testing3 = searchResults.Results[i].Platforms[j].Name;
-                            var testing5 = context.Platforms.Any(s => s.Name == testing3);
+                            //var testing3 = searchResults.Results[i].Platforms[j].Name;
+                            //var testing5 = context.Platforms.Any(s => s.Name == testing3);
                             //var testing4 = context.Platforms.SingleOrDefault(c => c.Name == resultList[i].Platforms[j].Name).Name;
                             //if (context.Platforms.SingleOrDefault(c => c.Name == resultList[i].Platforms[j].Name).Name == null || resultList[i].Platforms[j].Name != context.Platforms.SingleOrDefault(c => c.Name == resultList[i].Platforms[j].Name).Name)
                             if (!context.Platforms.Any(s => s.Name == searchResults.Results[i].Platforms[j].Name))
@@ -235,7 +235,6 @@ namespace GameTracker.Controllers
             HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "Game tracking demo thing");
             var response = await HttpClient.GetAsync(url2);
             var result = await response.Content.ReadAsStringAsync();
-            ViewBag.urltest = url2;
 
             return result;
         }
