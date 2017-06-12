@@ -4,6 +4,8 @@
 @{
 }
 @model DateTime
+@using GameTracker.ViewModels
+
 <div class="month">
     <ul>
         <li class="prev"><a asp-controller="Calendar" asp-action="Index" asp-route-id="@Model.AddMonths(-1).ToString("MM-dd-yyyy")">&#10094;</a></li>
@@ -35,7 +37,7 @@
 
 <ul class="days">
 
-    @foreach (int date in CalendarTesting2.ViewModels.ViewCalendar.GenCalendar(Model))
+    @foreach (int date in ViewCalendar.GenCalendar(Model))
     {
         @if (date == 0)
         {
