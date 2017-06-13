@@ -13,6 +13,7 @@
     <input type="submit" value="Search" />
 </form>
 <p>@ViewBag.Searchstring</p>
+<p>@ViewBag.Urltest</p>
 
 @if (ViewBag.Searchstring != null)
 {
@@ -58,5 +59,36 @@
                             </div>
                 <input type="submit" value="Add Game" />
 </form>
+
+        @if (Model.offset > 0 && Model.offset/10 < Model.number_of_page_results)
+        {
+            <form asp-controller="Search" asp-action="Results" method="post">
+                <input type="hidden" name="searchstring" value="@ViewBag.Searchstring">
+                <input type="hidden" name="page" value="@((Model.offset/10)+2)" />
+                <input type="submit" value="Next" />
+            </form>
+
+            <form asp-controller="Search" asp-action="Results" method="post">
+                <input type="hidden" name="searchstring" value="@ViewBag.Searchstring">
+                <input type="hidden" name="page" value="@((Model.offset/10))" />
+                <input type="submit" value="Previous" />
+            </form>
+        }
+        @if (Model.offset == 0)
+        {
+            <form asp-controller="Search" asp-action="Results" method="post">
+                <input type="hidden" name="searchstring" value="@ViewBag.Searchstring">
+                <input type="hidden" name="page" value="@((Model.offset/10)+2)" />
+                <input type="submit" value="Next" />
+            </form>
+        }
+        @if (Model.offset / 10 == Model.number_of_page_results)
+        {
+            <form asp-controller="Search" asp-action="Results" method="post">
+                <input type="hidden" name="searchstring" value="@ViewBag.Searchstring">
+                <input type="hidden" name="page" value="@((Model.offset/10))" />
+                <input type="submit" value="Previous" />
+            </form>
+        }
     }
 }

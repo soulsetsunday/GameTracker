@@ -58,14 +58,14 @@ namespace GameTracker.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Results(string searchstring)
+        public async Task<IActionResult> Results(string searchstring, int page = 1)
         {
             ViewBag.Searchstring = searchstring;
             // Temporary thing
             //RootObject searchResults = LoadJson();
 
             //actual loading
-            string response = await SendSearchRequest(searchstring);
+            string response = await SendSearchRequest(searchstring, page);
             searchResults = JsonConvert.DeserializeObject<RootObject>(response);
 
             return View(searchResults);
@@ -228,13 +228,15 @@ namespace GameTracker.Controllers
         }
 
         //this is a total mess
-        private async Task<String> SendSearchRequest(string searchstring, int offset = 0)
+        private async Task<String> SendSearchRequest(string searchstring, int page)
+            //this assumes page will always be sent
         {
-            string url2 = $@"http://www.giantbomb.com/api/search/?api_key={privateapikey}&format=json&query='{searchstring}'&resources=game";
+            string url2 = $@"http://www.giantbomb.com/api/search/?api_key={privateapikey}&format=json&page={page}&query='{searchstring}'&resources=game";
             //per documentation, use one static httpclient per app
             HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "Game tracking demo thing");
             var response = await HttpClient.GetAsync(url2);
             var result = await response.Content.ReadAsStringAsync();
+            ViewBag.Urltest = url2;
 
             return result;
         }
