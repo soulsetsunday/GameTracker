@@ -153,7 +153,8 @@ namespace GameTracker.Controllers
 
             IList<Game> games = context.Games.Include(i => i.GameImages).Include(p => p.Platform).OrderByDescending(x => x.MostRecentlyAdded).ToList();
 
-            return View(games);
+            //return View(games);
+            return RedirectToAction("Index", "Chart");
             //mabe redirect to chart
         }
 
@@ -173,7 +174,8 @@ namespace GameTracker.Controllers
             //this could probably go to a stats page or something
             //return AddGame();
             IList<Game> games = context.Games.Include(i => i.GameImages).Include(p => p.Platform).OrderByDescending(x => x.MostRecentlyAdded).ToList();
-            return View("AddGame", games);
+            //return View("AddGame", games);
+            return RedirectToAction("Index", "Chart");
 
         }
 
