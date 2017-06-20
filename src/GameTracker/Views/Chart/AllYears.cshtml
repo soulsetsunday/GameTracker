@@ -1,0 +1,12 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@using System.Globalization;
+@{
+}
+@model List<string>
+
+@foreach (var y in Model)
+{
+    <p><a asp-controller="Chart" asp-action="Yearly" asp-route-id="@y">@y</a></p>
+}
