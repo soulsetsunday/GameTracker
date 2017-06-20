@@ -29,10 +29,10 @@ namespace GameTracker.Controllers
 
         private const string apiFileLocation = "/Data/apikey.txt";
         private string privateapikey = LoadAPI();
-        public static List<Game> mainGameList = new List<Game>();
-        public static GameViewModelWrapper wrap = new GameViewModelWrapper();
+        //public static List<Game> mainGameList = new List<Game>();
+        //public static GameViewModelWrapper wrap = new GameViewModelWrapper();
         //static to hopefully pass values around
-        public static List<Result> resultList = new List<Result>();
+        //public static List<Result> resultList = new List<Result>();
         public static RootObject searchResults = new RootObject();
         //try 2, static to pass around controller, list of results from rootobject
         public static Platform tempPlatform = new Platform();
@@ -154,7 +154,9 @@ namespace GameTracker.Controllers
             IList<Game> games = context.Games.Include(i => i.GameImages).Include(p => p.Platform).OrderByDescending(x => x.MostRecentlyAdded).ToList();
 
             //return View(games);
-            return RedirectToAction("Index", "Chart");
+            //return RedirectToAction("Index", "Chart");
+            String thisMonth = currentWorkingDate.ToString("MM-yyyy");
+            return RedirectToAction("Monthly", "Chart", new { id = thisMonth });
             //mabe redirect to chart
         }
 
@@ -175,8 +177,9 @@ namespace GameTracker.Controllers
             //return AddGame();
             IList<Game> games = context.Games.Include(i => i.GameImages).Include(p => p.Platform).OrderByDescending(x => x.MostRecentlyAdded).ToList();
             //return View("AddGame", games);
-            return RedirectToAction("Index", "Chart");
-
+            //return RedirectToAction("Index", "Chart");
+            String thisMonth = currentWorkingDate.ToString("MM-yyyy");
+            return RedirectToAction("Monthly", "Chart", new { id = thisMonth });
         }
 
         public IActionResult AllGames()
