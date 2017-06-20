@@ -26,17 +26,17 @@ namespace GameTracker.Models
             
     }
 
-    public class Day
-    {
-        public int ID { get; set; }
-        public DateTime CalendarDate { get; set; }
-        public List<Game> GamesPlayed { get; set; }
+    //public class DayA
+    //{
+    //    public int ID { get; set; }
+    //    public DateTime CalendarDate { get; set; }
+    //    public List<Game> GamesPlayed { get; set; }
 
-        public Day()
-        {
-            GamesPlayed = new List<Game>();
-        }
-    }
+    //    public DayA()
+    //    {
+    //        GamesPlayed = new List<Game>();
+    //    }
+    //}
 
     public class GameImage
     {

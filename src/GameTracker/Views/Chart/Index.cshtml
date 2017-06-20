@@ -10,6 +10,12 @@
     string dateFormat = "MM/dd/yyyy";
 }
 
+<a asp-controller="Chart" asp-action="AllMonths">Monthly Charts</a>
+@if (ViewBag.Month != null)
+{
+    <p>Games played in @ViewBag.Month:</p>
+}
+
 <table cellspacing="0" cellpadding="0">
     <tr>
         <th>Name</th>

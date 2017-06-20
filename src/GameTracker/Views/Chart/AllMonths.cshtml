@@ -1,0 +1,50 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@using System.Globalization;
+@{
+}
+
+@model List<GameTracker.Models.Day>
+
+@for (int i = 1; i < 13; i++)
+{
+
+    int count = 0;
+    List<String> gameNames = new List<String>();
+    DateTime placeholderDate = new DateTime();
+    @foreach (var dayFromList in Model)
+    {
+
+
+        @if (dayFromList.CalendarDate.Month == i)
+        {
+            count++;
+            placeholderDate = dayFromList.CalendarDate;
+
+            @foreach (var game in dayFromList.GamesPlayed)
+            {
+                @if (!gameNames.Contains(game.Name))
+                {
+                    gameNames.Add(game.Name);
+
+                }
+            }
+        }
+
+
+
+    }
+    @if (count > 0)
+    {
+    <p><a asp-controller="Chart" asp-action="Monthly" asp-route-id="@placeholderDate.ToString("MM-yyyy")">@CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(i)</a>
+    <br />
+    Days a game was added: @count
+    Games added: @gameNames.Count
+    </p>
+    }
+    else
+    {
+        <p>@CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(i)</p>
+    }
+}
