@@ -24,7 +24,8 @@ namespace GameTracker.Controllers
         // GET: /<controller>/
         public IActionResult Index()
         {
-            ViewBag.Month = null;
+            //ViewBag.Month = null;
+            //ViewBag.Year = null;
             IList<Game> games = context.Games.Include(c => c.Platform).Include(i => i.GameImages).OrderByDescending(x => x.DaysPlayed).ToList();
 
             return View(games);

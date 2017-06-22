@@ -2,6 +2,9 @@
     For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
     Chart index
 *@
+@section Styles {
+<link rel="stylesheet" href="~/css/chart.css" />
+}
 
 @model IList<GameTracker.Models.Game>
 @{
@@ -15,6 +18,11 @@
 @if (ViewBag.Month != null)
 {
     <p>Games played in @ViewBag.Month:</p>
+}
+
+@if (ViewBag.Year != null)
+{
+    <h2>@ViewBag.Year</h2>
 }
 
 <table cellspacing="0" cellpadding="0">

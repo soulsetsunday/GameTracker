@@ -2,6 +2,9 @@
     For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @using System.Globalization;
+@section Styles {
+    <link rel="stylesheet" href="~/css/monthlytable.css" />
+}
 @{
 }
 
@@ -9,7 +12,12 @@
 
 <h2>@Model[0].CalendarDate.Year</h2>
 <br />
-
+<table style="width:50%">
+    <tr>
+        <th> Month </th>
+        <th> Days Played </th>
+        <th> Games Added </th>
+    </tr>
 @for (int i = 1; i < 13; i++)
 {
 
@@ -40,14 +48,16 @@
     }
     @if (count > 0)
     {
-    <p><a asp-controller="Chart" asp-action="Monthly" asp-route-id="@placeholderDate.ToString("MM-yyyy")">@CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(i)</a>
-    <br />
-    Days a game was added: @count
-    Games added: @gameNames.Count
-    </p>
+    <tr>
+        <td><a asp-controller="Chart" asp-action="Monthly" asp-route-id="@placeholderDate.ToString("MM-yyyy")">@CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(i)</a></td>
+        <td>@count</td>
+        <td>@gameNames.Count</td>
+    </tr>
+
     }
     else
     {
-        <p>@CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(i)</p>
+        <tr><td>@CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(i)</td> <td></td><td></td></tr>
     }
 }
+</table>
