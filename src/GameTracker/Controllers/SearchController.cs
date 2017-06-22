@@ -29,27 +29,22 @@ namespace GameTracker.Controllers
 
         private const string apiFileLocation = "/Data/apikey.txt";
         private string privateapikey = LoadAPI();
-        //public static List<Game> mainGameList = new List<Game>();
-        //public static GameViewModelWrapper wrap = new GameViewModelWrapper();
-        //static to hopefully pass values around
-        //public static List<Result> resultList = new List<Result>();
+        public const int mostRecentlyAddedLimit = 5;
         public static RootObject searchResults = new RootObject();
-        //try 2, static to pass around controller, list of results from rootobject
+        //static to pass around controller, list of results from rootobject, this is still in use
         public static Platform tempPlatform = new Platform();
-        //Really bad form, probably 
         public static int storeIndex;
-        //"
         public static DateTime dateForDB;
         public static DateTime currentWorkingDate;
-        public const int mostRecentlyAddedLimit = 5;
+        //all 4 still in use, change these
+
 
         [HttpGet]
         public IActionResult Index(string id)
         {
-            //id is the date in a string, it's named id because of routing, maybe look up how to change it
-            DateTime calendarDate = new DateTime();
+            DateTime calendarDate = DateTime.Today;
             DateTime.TryParseExact(id, "MM-dd-yyyy", DateTimeFormatInfo.CurrentInfo, DateTimeStyles.None, out calendarDate);
-            //TODO: if this is null, make it today
+            //if id can't be parsed, use today
             ViewBag.date = calendarDate;
             currentWorkingDate = calendarDate;
 
@@ -85,11 +80,11 @@ namespace GameTracker.Controllers
                 {
                     storeIndex = i;
 
-                    int loopcheck1 = 0;
-                    var loopcheck2 = searchResults.Results[i].Platforms.Count;
+                    //int loopcheck1 = 0;
+                    //var loopcheck2 = searchResults.Results[i].Platforms.Count;
                     for (int j = 0; j < searchResults.Results[i].Platforms.Count; j++)
                     {
-                        var loopcheck3 = searchResults.Results[i].Platforms[j].ID;
+                        //var loopcheck3 = searchResults.Results[i].Platforms[j].ID;
                         if (searchResults.Results[i].Platforms[j].ID == platformid)
                         {
                             //SingleOrDefault instead of single to prevent null exceptions
@@ -153,11 +148,8 @@ namespace GameTracker.Controllers
 
             IList<Game> games = context.Games.Include(i => i.GameImages).Include(p => p.Platform).OrderByDescending(x => x.MostRecentlyAdded).ToList();
 
-            //return View(games);
-            //return RedirectToAction("Index", "Chart");
             String thisMonth = currentWorkingDate.ToString("MM-yyyy");
             return RedirectToAction("Monthly", "Chart", new { id = thisMonth });
-            //mabe redirect to chart
         }
 
         public IActionResult AddGame()
@@ -174,10 +166,7 @@ namespace GameTracker.Controllers
             AddGameToDay(recentGame, currentWorkingDate);
 
             //this could probably go to a stats page or something
-            //return AddGame();
             IList<Game> games = context.Games.Include(i => i.GameImages).Include(p => p.Platform).OrderByDescending(x => x.MostRecentlyAdded).ToList();
-            //return View("AddGame", games);
-            //return RedirectToAction("Index", "Chart");
             String thisMonth = currentWorkingDate.ToString("MM-yyyy");
             return RedirectToAction("Monthly", "Chart", new { id = thisMonth });
         }
@@ -227,21 +216,19 @@ namespace GameTracker.Controllers
                 game.MostRecentlyAdded = day;
             }
 
-            //I hope this can be outside the loops?
             context.SaveChanges();
             return;
         }
 
-        //this is a total mess
         private async Task<String> SendSearchRequest(string searchstring, int page)
             //this assumes page will always be sent
         {
-            string url2 = $@"http://www.giantbomb.com/api/search/?api_key={privateapikey}&format=json&page={page}&query='{searchstring}'&resources=game";
+            string url = $@"http://www.giantbomb.com/api/search/?api_key={privateapikey}&format=json&page={page}&query='{searchstring}'&resources=game";
             //per documentation, use one static httpclient per app
             HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "Game tracking demo thing");
-            var response = await HttpClient.GetAsync(url2);
+            var response = await HttpClient.GetAsync(url);
             var result = await response.Content.ReadAsStringAsync();
-            ViewBag.Urltest = url2;
+            //ViewBag.Urltest = url;
 
             return result;
         }
@@ -273,7 +260,6 @@ namespace GameTracker.Controllers
         public void TestJson()
         {
             RootObject test = LoadJson();
-            int i = 4;
             return;
 
         }
