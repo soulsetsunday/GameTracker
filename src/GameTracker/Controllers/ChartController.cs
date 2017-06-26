@@ -107,5 +107,11 @@ namespace GameTracker.Controllers
 
             return View("Index", games);
         }
+
+        public IActionResult Goty()
+        {
+            IList<Game> games = context.Games.Where(g => g.Original_release_date.Year == DateTime.Today.Year).Include(c => c.Platform).Include(i => i.GameImages).OrderByDescending(x => x.DaysPlayed).ToList();
+            return View("Index", games);
+        }
     }
 }

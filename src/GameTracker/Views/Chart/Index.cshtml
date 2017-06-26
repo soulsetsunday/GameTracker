@@ -13,8 +13,9 @@
     string dateFormat = "MM/dd/yyyy";
 }
 
-<a asp-controller="Chart" asp-action="AllMonths">Monthly Charts</a>
-<a asp-controller="Chart" asp-action="AllYears">Yearly Charts</a>
+<a asp-controller="Chart" asp-action="AllMonths">Monthly Charts</a> |
+<a asp-controller="Chart" asp-action="AllYears">Yearly Charts</a> |
+<a asp-controller="Chart" asp-action="Goty">Games released this year</a>
 @if (ViewBag.Month != null)
 {
     <p>Games played in @ViewBag.Month:</p>

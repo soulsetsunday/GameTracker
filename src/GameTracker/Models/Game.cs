@@ -26,18 +26,6 @@ namespace GameTracker.Models
             
     }
 
-    //public class DayA
-    //{
-    //    public int ID { get; set; }
-    //    public DateTime CalendarDate { get; set; }
-    //    public List<Game> GamesPlayed { get; set; }
-
-    //    public DayA()
-    //    {
-    //        GamesPlayed = new List<Game>();
-    //    }
-    //}
-
     public class GameImage
     {
         public string Icon_url { get; set; }
