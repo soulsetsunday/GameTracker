@@ -24,8 +24,6 @@ namespace GameTracker.Controllers
         // GET: /<controller>/
         public IActionResult Index()
         {
-            //ViewBag.Month = null;
-            //ViewBag.Year = null;
             IList<Game> games = context.Games.Include(c => c.Platform).Include(i => i.GameImages).OrderByDescending(x => x.DaysPlayed).ToList();
 
             return View(games);
@@ -46,7 +44,6 @@ namespace GameTracker.Controllers
 
         public IActionResult AllYears()
         {
-            //I don't know that these need to be stings
             List<string> yearList = new List<string>();
             List<Day> days = context.Days.Include(g => g.GamesPlayed).OrderByDescending(x => x.CalendarDate).ToList();
 

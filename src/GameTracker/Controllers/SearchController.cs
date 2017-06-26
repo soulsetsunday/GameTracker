@@ -69,10 +69,6 @@ namespace GameTracker.Controllers
         [HttpPost]
         public IActionResult AddGame(int gameid, int platformid)
         {
-            //no model valedation, maybe later
-            //all of this should be eslewhere
-            //atm this is using a static RootObject
-            //TODO: check if game is already in database
 
             for (int i = 0; i < searchResults.Results.Count; i++)
             {
@@ -80,20 +76,11 @@ namespace GameTracker.Controllers
                 {
                     storeIndex = i;
 
-                    //int loopcheck1 = 0;
-                    //var loopcheck2 = searchResults.Results[i].Platforms.Count;
                     for (int j = 0; j < searchResults.Results[i].Platforms.Count; j++)
                     {
-                        //var loopcheck3 = searchResults.Results[i].Platforms[j].ID;
                         if (searchResults.Results[i].Platforms[j].ID == platformid)
                         {
-                            //SingleOrDefault instead of single to prevent null exceptions
-                            //var testing2 = context.Platforms;
-                            //var testing = context.Platforms.FirstOrDefault(c => c.Name == resultList[i].Platforms[j].Name).Name;
-                            //var testing3 = searchResults.Results[i].Platforms[j].Name;
-                            //var testing5 = context.Platforms.Any(s => s.Name == testing3);
-                            //var testing4 = context.Platforms.SingleOrDefault(c => c.Name == resultList[i].Platforms[j].Name).Name;
-                            //if (context.Platforms.SingleOrDefault(c => c.Name == resultList[i].Platforms[j].Name).Name == null || resultList[i].Platforms[j].Name != context.Platforms.SingleOrDefault(c => c.Name == resultList[i].Platforms[j].Name).Name)
+                            
                             if (!context.Platforms.Any(s => s.Name == searchResults.Results[i].Platforms[j].Name))
                             {
                                 Platform newPlatform = new Platform
@@ -102,7 +89,7 @@ namespace GameTracker.Controllers
                                 };
                                 context.Platforms.Add(newPlatform);
                                 context.SaveChanges();
-                                //figure out how to do this
+
                                 tempPlatform = context.Platforms.Single(c => c.Name == searchResults.Results[i].Platforms[j].Name);
                             }
                             else
@@ -132,7 +119,6 @@ namespace GameTracker.Controllers
                         var altv = searchResults.Results[i].Image.GetType().GetProperty("Icon_url").GetValue(gv, null);
                         var tryname = property.Name;
                         var svalue2 = searchResults.Results[i].Image.GetType().GetProperty(tryname).GetValue(gv, null);
-                        //var svalue = searchResults.Results[i].Image.GetType().GetProperty("property.Name").GetValue(gv, null);
                         newDBGame.GameImages.GetType().GetProperty(property.Name).SetValue(newDBGame.GameImages, svalue2);
                     }
 
@@ -165,7 +151,6 @@ namespace GameTracker.Controllers
             Game recentGame = context.Games.Single(c => c.ID == gameid);
             AddGameToDay(recentGame, currentWorkingDate);
 
-            //this could probably go to a stats page or something
             IList<Game> games = context.Games.Include(i => i.GameImages).Include(p => p.Platform).OrderByDescending(x => x.MostRecentlyAdded).ToList();
             String thisMonth = currentWorkingDate.ToString("MM-yyyy");
             return RedirectToAction("Monthly", "Chart", new { id = thisMonth });
@@ -183,7 +168,6 @@ namespace GameTracker.Controllers
             return View(days);
         }
 
-        //this needs to be elsewhere
         //can't pass DateTime.Today, nullable DateTime would need to be converted 
         public void AddGameToDay(Game game, DateTime day = default(DateTime))
         {
