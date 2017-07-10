@@ -12,6 +12,7 @@ using GameTracker.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 using System.Globalization;
+using HtmlAgilityPack;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -53,6 +54,51 @@ namespace GameTracker.Controllers
         }
 
         [HttpPost]
+        public IActionResult ReleaseDetails(string date, int gameid, int platformid)
+        {
+            //this probably can't be named date
+            //this assumes a non-parsable date is a url/all dates are valid and parsable
+            DateTime dateParse = new DateTime();
+            if (DateTime.TryParse(date, out dateParse))
+                return AddGame (gameid, platformid, date);
+
+            var html = date + "releases/";
+            HtmlWeb web = new HtmlWeb();
+            var htmlDoc = web.Load(html);
+
+            List<string> pageValues = new List<string>() { "name", "platform", "region", "releaseDate" };
+            List<string> releaseDates = new List<string>();
+            List<string> justDates = new List<string>();
+
+            var htmlNodes = htmlDoc.DocumentNode.SelectNodes("//tbody/tr/td");
+
+            foreach (var node in htmlNodes)
+            {
+                if (node.Attributes.Count > 0 && pageValues.Contains(node.Attributes["data-field"].Value))
+                {
+                    releaseDates.Add(node.Attributes["data-field"].Value.Trim());
+                    releaseDates.Add(node.InnerText.Trim());
+                }
+
+            }
+
+            for (int i = 0; i < releaseDates.Count; i++)
+            {
+                if ((i + 1) % 8 == 0)
+                    justDates.Add(releaseDates[i]);
+            }
+
+            ReleaseDetailsViewModel send = new ReleaseDetailsViewModel
+            {
+                GameID = gameid,
+                PlatformID = platformid,
+                ReleaseDates = justDates,
+            };
+
+            return View(send);
+        }
+
+        [HttpPost]
         public async Task<IActionResult> Results(string searchstring, int page = 1)
         {
             ViewBag.Searchstring = searchstring;
@@ -67,7 +113,8 @@ namespace GameTracker.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddGame(int gameid, int platformid)
+        public IActionResult AddGame(int gameid, int platformid, string date)
+            //now gets dates from ReleaseDetails or view
         {
 
             for (int i = 0; i < searchResults.Results.Count; i++)
