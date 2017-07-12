@@ -56,7 +56,6 @@ namespace GameTracker.Controllers
         [HttpPost]
         public IActionResult ReleaseDetails(string date, int gameid, int platformid)
         {
-            //this probably can't be named date
             //this assumes a non-parsable date is a url/all dates are valid and parsable
             DateTime dateParse = new DateTime();
             if (DateTime.TryParse(date, out dateParse))
@@ -114,7 +113,6 @@ namespace GameTracker.Controllers
 
         [HttpPost]
         public IActionResult AddGame(int gameid, int platformid, string date)
-            //now gets dates from ReleaseDetails or view
         {
 
             for (int i = 0; i < searchResults.Results.Count; i++)
